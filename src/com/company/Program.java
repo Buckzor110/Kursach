@@ -6,17 +6,16 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Program {
-    float[][] x = new float[3][22];
-    float[] y = new float[22];
-    float[][] matrixD = new float[4][4];
-    float yAverage = 0;
-    float[] yNormalized = new float[22];
-    float[] rYx = new float[3];
-    int m = 3;
-    int n = 22;
-    int[] ryxOrder = {0, 1, 2};
-    MathFunc[] resultFuncs = new MathFunc[3];
-
+    private final int m = 3;
+    private final int n = 22;
+    private final float[][] x = new float[3][22];
+    private final float[] y = new float[22];
+    private final float[][] matrixD = new float[4][4];
+    private float yAverage = 0;
+    private final float[] yNormalized = new float[22];
+    private final float[] rYx = new float[3];
+    private final int[] ryxOrder = {0, 1, 2};
+    private final MathFunc[] resultFunctions = new MathFunc[3];
 
     public List<MathFunc> calculate() {
         System.out.println("Введите имя файла: ");
@@ -28,7 +27,7 @@ public class Program {
         sortRyx();
         function_build();
         printResultTable();
-        return List.of(resultFuncs);
+        return List.of(resultFunctions);
     }
 
     private void getData(String path) {
@@ -60,7 +59,6 @@ public class Program {
         }
     }
 
-
     private float ryxK(float[] x, float[] y)//22, 22
     {
         float sumX = 0, sumY = 0, sumXY = 0, sumXSq = 0, sumYSq = 0, r;
@@ -76,7 +74,6 @@ public class Program {
         r = (n * sumXY - sumX * sumY) / (float) Math.sqrt((n * sumXSq - sumX * sumX) * (n * sumYSq - sumY * sumY));
         return r;
     }
-
 
     // заполнение матрицы matrix_D
     private void fillMatrixD() {
@@ -94,7 +91,6 @@ public class Program {
 
         }
     }
-
 
     // Считает детерминант
     private float det(int a, int b) // строка. столбец
@@ -141,11 +137,10 @@ public class Program {
         }
     }
 
-
     private void function_build() {
         for (int i = 0; i < 3; i++) {
             MathFunc result = functionSelection(this.x[this.ryxOrder[i]], this.yNormalized);
-            this.resultFuncs[i] = result;
+            this.resultFunctions[i] = result;
 
             for (int j = 0; j < 22; j++) {
                 this.yNormalized[j] = this.yNormalized[j] / result.calculate(x[this.ryxOrder[i]][j]);
@@ -154,7 +149,6 @@ public class Program {
 
         //string function_as_string = "y = " + to_string(y_average);
     }
-
 
     private MathFunc functionSelection(float[] x, float[] y) //selects the best function
     {
@@ -271,7 +265,6 @@ public class Program {
                 mn = deviationSum[i];
             }
         }
-
         return new MathFunc(a[functionType], b[functionType], functionType);
     }
 
@@ -296,9 +289,9 @@ public class Program {
 
     private void printResultTable() {
         for (int i = 0; i < 22; i++) {
-            float yRegression = (yAverage * resultFuncs[0].calculate(x[ryxOrder[0]][i]) *
-                    resultFuncs[1].calculate(x[ryxOrder[1]][i]) *
-                    resultFuncs[2].calculate(x[ryxOrder[2]][i]));
+            float yRegression = (yAverage * resultFunctions[0].calculate(x[ryxOrder[0]][i]) *
+                    resultFunctions[1].calculate(x[ryxOrder[1]][i]) *
+                    resultFunctions[2].calculate(x[ryxOrder[2]][i]));
 
             System.out.println(x[0][i] + " " + x[1][i] + " " + x[2][i] + " " + y[i] + " " + yRegression);
         }
