@@ -59,8 +59,7 @@ public class Program {
         }
     }
 
-    private float ryxK(float[] x, float[] y)//22, 22
-    {
+    private float ryxK(float[] x, float[] y) { //22, 22
         float sumX = 0, sumY = 0, sumXY = 0, sumXSq = 0, sumYSq = 0, r;
 
         for (int i = 0; i < 22; i++) {
@@ -93,8 +92,7 @@ public class Program {
     }
 
     // Считает детерминант
-    private float det(int a, int b) // строка. столбец
-    {
+    private float det(int a, int b) { // строка. столбец
         int ind = 0;
         float d;
         float[] els = new float[9];
@@ -106,7 +104,6 @@ public class Program {
                 }
             }
         }
-
         d = els[0] * els[4] * els[8] + els[1] * els[5] * els[6] + els[3] * els[7] * els[2];
         return d;
     }
@@ -118,8 +115,7 @@ public class Program {
         }
     }
 
-    private void sortRyx()// сортировка пузырьком; в order_corellation_coof_ryx сохраняется порядок
-    {
+    private void sortRyx() {  // сортировка пузырьком; в order_corellation_coof_ryx сохраняется порядок
         float fbuf;
         int ibuf;
         for (int i = 1; i < 3; i++) {
@@ -150,8 +146,7 @@ public class Program {
         //string function_as_string = "y = " + to_string(y_average);
     }
 
-    private MathFunc functionSelection(float[] x, float[] y) //selects the best function
-    {
+    private MathFunc functionSelection(float[] x, float[] y) { //selects the best function
         float[] A = new float[6];
         float[] B = new float[6];
         float[] a = new float[6];
@@ -268,8 +263,7 @@ public class Program {
         return new MathFunc(a[functionType], b[functionType], functionType);
     }
 
-    private float[] mnkLinear(float[] x, float[] y) // returns a and b
-    {
+    private float[] mnkLinear(float[] x, float[] y) { // returns a and b
         float sumX = 0, sumY = 0, sumXY = 0, sumXSq = 0;
         //подсчёт коофицентов
         for (int i = 0; i < 8; i++) {
