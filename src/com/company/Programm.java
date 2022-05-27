@@ -5,17 +5,17 @@ import java.util.Scanner;
 
 public class Programm {
     int i, j;
-    float x[][];
-    float  y[];
-    float  matrix_D[][];
+    float[][] x;
+    float[] y;
+    float[][] matrix_D;
     float y_average;
-    float y_normalized[];
-    float r_yx[];
+    float[] y_normalized;
+    float[] r_yx;
     int m = 3, n = 22;
-    int ryx_order[] = { 0, 1, 2 };
-    float coofs_a_b[][];
-    int func_type[];
-    MathFunc result_funcs[];
+    int[] ryx_order = { 0, 1, 2 };
+    float[][] coofs_a_b;
+    int[] func_type;
+    MathFunc[] result_funcs;
 
 
     void calculate()
@@ -72,12 +72,11 @@ public class Programm {
         catch (Exception ex)
         {
             ex.printStackTrace();
-            return;
         }
     }
 
 
-    float ryx_k(float x[], float y[])//22, 22
+    float ryx_k(float[] x, float[] y)//22, 22
     {
         float sum_x = 0, sum_y = 0, sum_x_y = 0, sum_x_sq = 0, sum_y_sq = 0, r;
 
@@ -120,8 +119,8 @@ public class Programm {
     float det(int a, int b) // строка. столбец
     {
         int ind = 0;
-        float d = 0;
-        float els[] = new float[9];
+        float d;
+        float[] els = new float[9];
         for (int i = 0; i < 4; i++)
         {
             for (int j = 0; j < 4; j++)
@@ -187,13 +186,13 @@ public class Programm {
     }
 
 
-    MathFunc function_selection(float x[], float y[]) //selects the best function
+    MathFunc function_selection(float[] x, float[] y) //selects the best function
     {
-        float A[] = new float[6];
-        float B[] = new float[6];
-        float a[] = new float[6];
-        float b[] = new float[6];
-        float deviation_sum[] = new float[6]; // набор из 6 пар a b, описанных ниже некоторые надо преодразовать в соответствии с уравнениями ниже
+        float[] A = new float[6];
+        float[] B = new float[6];
+        float[] a = new float[6];
+        float[] b = new float[6];
+        float[] deviation_sum = new float[6]; // набор из 6 пар a b, описанных ниже некоторые надо преодразовать в соответствии с уравнениями ниже
 	    /*
 	    все уравнения приводятся к виду линейному виду: Y = A * X + B
 	    function type 1.
@@ -222,10 +221,10 @@ public class Programm {
 	    */
 
         // подготовка массивов ввода по условиям выше
-        float y_pow_min_one[] = new float[22];
-        float x_pow_min_one[] = new float[22];
-        float ln_x[] = new float[22];
-        float ln_y[] = new float[22];
+        float[] y_pow_min_one = new float[22];
+        float[] x_pow_min_one = new float[22];
+        float[] ln_x = new float[22];
+        float[] ln_y = new float[22];
 
 
         for (int i = 0; i < 22; i++)
@@ -236,7 +235,7 @@ public class Programm {
             ln_y[i] = (float)Math.log(y[i]);
         }
 
-        float res[] = new float[2]; //stores function result
+        float[] res; //stores function result
 
         //type 1
         res = mnk_linear(x, y);
@@ -310,7 +309,7 @@ public class Programm {
         return new MathFunc(a[function_type], b[function_type], function_type);
     }
 
-    float[] mnk_linear(float x[], float y[]) // returns a and b
+    float[] mnk_linear(float[] x, float[] y) // returns a and b
     {
         float sum_x = 0, sum_y = 0, sum_x_y = 0, sum_x_sq = 0;
         //подсчёт коофицентов
@@ -323,7 +322,7 @@ public class Programm {
         }
 
         //вычисление и фактический возврат
-        float res[] = new float[2];
+        float[] res = new float[2];
         res[0] = (n * sum_x_y - sum_x * sum_y) / (n * sum_x_sq - sum_x * sum_x);
         res[1] = (sum_x_sq * sum_y - sum_x * sum_x_y) / (n * sum_x_sq - sum_x * sum_x);
 
