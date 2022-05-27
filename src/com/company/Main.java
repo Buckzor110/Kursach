@@ -3,7 +3,7 @@ package com.company;
 public class Main {
 
     public static void main(String[] args) {
-        Programm programm = new Programm();
-        programm.calculate();
+        Program program = new Program();
+        System.out.println(program.calculate());
     }
 }

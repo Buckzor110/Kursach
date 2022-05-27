@@ -1,94 +1,85 @@
 package com.company;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.List;
 import java.util.Scanner;
 
-public class Programm {
-    float[][] x;
-    float[] y;
-    float[][] matrixD;
-    float yAverage;
-    float[] yNormalized;
-    float[] rYx;
+public class Program {
+    float[][] x = new float[3][22];
+    float[] y = new float[22];
+    float[][] matrixD = new float[4][4];
+    float yAverage = 0;
+    float[] yNormalized = new float[22];
+    float[] rYx = new float[3];
     int m = 3;
     int n = 22;
     int[] ryxOrder = {0, 1, 2};
-    float[][] coofsAB;
-    int[] funcType;
-    MathFunc[] resultFuncs;
+    MathFunc[] resultFuncs = new MathFunc[3];
 
 
-    public void calculate() {
-        x = new float[3][22];
-        y = new float[22];
-        matrixD = new float[4][4];
-        yAverage = 0;
-        yNormalized = new float[22];
-        rYx = new float[3];
-        coofsAB = new float[3][2];
-        funcType = new int[3];
-        resultFuncs = new MathFunc[3];
-
-        getData();
+    public List<MathFunc> calculate() {
+        System.out.println("Введите имя файла: ");
+        Scanner scanner = new Scanner(System.in);
+        String file = scanner.nextLine();
+        getData(file);
         fillMatrixD();
         fillRyx();
         sortRyx();
         function_build();
         printResultTable();
-        for (int i = 0; i < 3; i++) {
-            System.out.println(resultFuncs[i]);
-        }
+        return List.of(resultFuncs);
     }
 
-    public void getData() {
+    private void getData(String path) {
         try {
-            File file = new File("src/com/company/input.txt");
-            Scanner inp = new Scanner(file);
+            File file = new File(String.format("src/com/company/%s", path));
+            Scanner scanner = new Scanner(file);
             int i = 0;
-            while (inp.hasNextLine()) {
-                String line = inp.nextLine();
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
 
-                String[] split_line = line.split(" ");
-                this.x[0][i] = Integer.parseInt(split_line[0]);
-                this.x[1][i] = Integer.parseInt(split_line[1]);
-                this.x[2][i] = Integer.parseInt(split_line[2]);
+                String[] splitLine = line.split(" ");
+                this.x[0][i] = Integer.parseInt(splitLine[0]);
+                this.x[1][i] = Integer.parseInt(splitLine[1]);
+                this.x[2][i] = Integer.parseInt(splitLine[2]);
 
-                this.y[i] = Float.parseFloat(split_line[3]);
+                this.y[i] = Float.parseFloat(splitLine[3]);
                 this.yAverage += this.y[i];
                 i++;
             }
 
-            inp.close();
+            scanner.close();
 
             this.yAverage = this.yAverage / this.n;
 
             for (i = 0; i < 22; i++)
                 this.yNormalized[i] = this.y[i] / this.yAverage;
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (FileNotFoundException ex) {
+            throw new RuntimeException("Заданный файл не найден!");
         }
     }
 
 
-    public float ryxK(float[] x, float[] y)//22, 22
+    private float ryxK(float[] x, float[] y)//22, 22
     {
-        float sum_x = 0, sum_y = 0, sum_x_y = 0, sum_x_sq = 0, sum_y_sq = 0, r;
+        float sumX = 0, sumY = 0, sumXY = 0, sumXSq = 0, sumYSq = 0, r;
 
         for (int i = 0; i < 22; i++) {
-            sum_x += x[i];
-            sum_y += y[i];
-            sum_x_y += x[i] * y[i];
-            sum_x_sq += x[i] * x[i];
-            sum_y_sq += y[i] * y[i];
+            sumX += x[i];
+            sumY += y[i];
+            sumXY += x[i] * y[i];
+            sumXSq += x[i] * x[i];
+            sumYSq += y[i] * y[i];
         }
 
-        r = (n * sum_x_y - sum_x * sum_y) / (float) Math.sqrt((n * sum_x_sq - sum_x * sum_x) * (n * sum_y_sq - sum_y * sum_y));
+        r = (n * sumXY - sumX * sumY) / (float) Math.sqrt((n * sumXSq - sumX * sumX) * (n * sumYSq - sumY * sumY));
         return r;
     }
 
 
     // заполнение матрицы matrix_D
-    public void fillMatrixD() {
+    private void fillMatrixD() {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j <= i; j++) {
                 if (i == j)
@@ -106,7 +97,7 @@ public class Programm {
 
 
     // Считает детерминант
-    public float det(int a, int b) // строка. столбец
+    private float det(int a, int b) // строка. столбец
     {
         int ind = 0;
         float d;
@@ -124,14 +115,14 @@ public class Programm {
         return d;
     }
 
-    public void fillRyx() {
+    private void fillRyx() {
         //заполнение corellation_coof_ryx
         for (int k = 0; k < this.m; k++) {
             this.rYx[k] = (float) (Math.abs(det(m, k) / Math.sqrt(det(m, m) * det(k, k))));
         }
     }
 
-    public void sortRyx()// сортировка пузырьком; в order_corellation_coof_ryx сохраняется порядок
+    private void sortRyx()// сортировка пузырьком; в order_corellation_coof_ryx сохраняется порядок
     {
         float fbuf;
         int ibuf;
@@ -151,7 +142,7 @@ public class Programm {
     }
 
 
-    public void function_build() {
+    private void function_build() {
         for (int i = 0; i < 3; i++) {
             MathFunc result = functionSelection(this.x[this.ryxOrder[i]], this.yNormalized);
             this.resultFuncs[i] = result;
@@ -165,7 +156,7 @@ public class Programm {
     }
 
 
-    public MathFunc functionSelection(float[] x, float[] y) //selects the best function
+    private MathFunc functionSelection(float[] x, float[] y) //selects the best function
     {
         float[] A = new float[6];
         float[] B = new float[6];
@@ -284,7 +275,7 @@ public class Programm {
         return new MathFunc(a[functionType], b[functionType], functionType);
     }
 
-    public float[] mnkLinear(float[] x, float[] y) // returns a and b
+    private float[] mnkLinear(float[] x, float[] y) // returns a and b
     {
         float sumX = 0, sumY = 0, sumXY = 0, sumXSq = 0;
         //подсчёт коофицентов
@@ -303,7 +294,7 @@ public class Programm {
         return res;//[a, b]
     }
 
-    public void printResultTable() {
+    private void printResultTable() {
         for (int i = 0; i < 22; i++) {
             float yRegression = (yAverage * resultFuncs[0].calculate(x[ryxOrder[0]][i]) *
                     resultFuncs[1].calculate(x[ryxOrder[1]][i]) *
