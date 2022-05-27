@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.Scanner;
 
 public class Programm {
-    int i, j;
     float[][] x;
     float[] y;
     float[][] matrix_D;
@@ -12,14 +11,13 @@ public class Programm {
     float[] y_normalized;
     float[] r_yx;
     int m = 3, n = 22;
-    int[] ryx_order = { 0, 1, 2 };
+    int[] ryx_order = {0, 1, 2};
     float[][] coofs_a_b;
     int[] func_type;
     MathFunc[] result_funcs;
 
 
-    void calculate()
-    {
+    public void calculate() {
         x = new float[3][22];
         y = new float[22];
         matrix_D = new float[4][4];
@@ -41,15 +39,12 @@ public class Programm {
 
     }
 
-    void get_data()
-    {
-        try
-        {
+    public void get_data() {
+        try {
             File file = new File("src/com/company/input.txt");
             Scanner inp = new Scanner(file);
             int i = 0;
-            while(inp.hasNextLine())
-            {
+            while (inp.hasNextLine()) {
                 String line = inp.nextLine();
 
                 String[] split_line = line.split(" ");
@@ -68,20 +63,17 @@ public class Programm {
 
             for (i = 0; i < 22; i++)
                 this.y_normalized[i] = this.y[i] / this.y_average;
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
 
-    float ryx_k(float[] x, float[] y)//22, 22
+    public float ryx_k(float[] x, float[] y)//22, 22
     {
         float sum_x = 0, sum_y = 0, sum_x_y = 0, sum_x_sq = 0, sum_y_sq = 0, r;
 
-        for (int i = 0; i < 22; i++)
-        {
+        for (int i = 0; i < 22; i++) {
             sum_x += x[i];
             sum_y += y[i];
             sum_x_y += x[i] * y[i];
@@ -89,18 +81,15 @@ public class Programm {
             sum_y_sq += y[i] * y[i];
         }
 
-        r = (n * sum_x_y - sum_x * sum_y) / (float)Math.sqrt((n * sum_x_sq - sum_x * sum_x) * (n * sum_y_sq - sum_y * sum_y));
+        r = (n * sum_x_y - sum_x * sum_y) / (float) Math.sqrt((n * sum_x_sq - sum_x * sum_x) * (n * sum_y_sq - sum_y * sum_y));
         return r;
     }
 
 
     // заполнение матрицы matrix_D
-    void fill_matrix_D()
-    {
-        for (int i = 0; i < 4; i++)
-        {
-            for (int j = 0; j <= i; j++)
-            {
+    public void fill_matrix_D() {
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j <= i; j++) {
                 if (i == j)
                     this.matrix_D[i][j] = 1;
                 else if (i == 3)
@@ -116,17 +105,14 @@ public class Programm {
 
 
     // Считает детерминант
-    float det(int a, int b) // строка. столбец
+    public float det(int a, int b) // строка. столбец
     {
         int ind = 0;
         float d;
         float[] els = new float[9];
-        for (int i = 0; i < 4; i++)
-        {
-            for (int j = 0; j < 4; j++)
-            {
-                if ((i != a) & (j != b))
-                {
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                if ((i != a) & (j != b)) {
                     els[ind] = this.matrix_D[i][j];
                     ind++;
                 }
@@ -137,25 +123,20 @@ public class Programm {
         return d;
     }
 
-    void fill_ryx()
-    {
+    public void fill_ryx() {
         //заполнение corellation_coof_ryx
-        for (int k = 0; k < this.m; k++)
-        {
-            this.r_yx[k] = (float)(Math.abs(det(m, k) / Math.sqrt(det(m, m) * det(k, k))));
+        for (int k = 0; k < this.m; k++) {
+            this.r_yx[k] = (float) (Math.abs(det(m, k) / Math.sqrt(det(m, m) * det(k, k))));
         }
     }
 
-    void sort_ryx()// сортировка пузырьком; в order_corellation_coof_ryx сохраняется порядок
+    public void sort_ryx()// сортировка пузырьком; в order_corellation_coof_ryx сохраняется порядок
     {
         float fbuf;
         int ibuf;
-        for (int i = 1; i < 3; i++)
-        {
-            for (int j = i; j < 3; j++)
-            {
-                if (this.r_yx[j - 1] < this.r_yx[j])
-                {
+        for (int i = 1; i < 3; i++) {
+            for (int j = i; j < 3; j++) {
+                if (this.r_yx[j - 1] < this.r_yx[j]) {
                     fbuf = this.r_yx[j - 1];
                     this.r_yx[j - 1] = this.r_yx[j];
                     this.r_yx[j] = fbuf;
@@ -169,16 +150,13 @@ public class Programm {
     }
 
 
-    void function_build()
-    {
-        for (int i = 0; i < 3; i++)
-        {
+    public void function_build() {
+        for (int i = 0; i < 3; i++) {
             MathFunc result = function_selection(this.x[this.ryx_order[i]], this.y_normalized);
             this.result_funcs[i] = result;
 
-            for (j = 0; j < 22; j++)
-            {
-                this.y_normalized[j] = this.y_normalized[j] / result.calc(x[this.ryx_order[i]][j]);
+            for (int j = 0; j < 22; j++) {
+                this.y_normalized[j] = this.y_normalized[j] / result.calculate(x[this.ryx_order[i]][j]);
             }
         }
 
@@ -186,7 +164,7 @@ public class Programm {
     }
 
 
-    MathFunc function_selection(float[] x, float[] y) //selects the best function
+    public MathFunc function_selection(float[] x, float[] y) //selects the best function
     {
         float[] A = new float[6];
         float[] B = new float[6];
@@ -227,12 +205,11 @@ public class Programm {
         float[] ln_y = new float[22];
 
 
-        for (int i = 0; i < 22; i++)
-        {
+        for (int i = 0; i < 22; i++) {
             y_pow_min_one[i] = 1 / y[i];
             x_pow_min_one[i] = 1 / x[i];
-            ln_x[i] = (float)Math.log(x[i]);
-            ln_y[i] = (float)Math.log(y[i]);
+            ln_x[i] = (float) Math.log(x[i]);
+            ln_y[i] = (float) Math.log(y[i]);
         }
 
         float[] res; //stores function result
@@ -252,11 +229,11 @@ public class Programm {
         //type 4
         res = mnk_linear(x_pow_min_one, y_pow_min_one);
         A[3] = res[0];
-        B[3] = (float)Math.exp(res[1]);
+        B[3] = (float) Math.exp(res[1]);
         //type 5
         res = mnk_linear(x, ln_y);
         A[4] = res[0];
-        B[4] = (float)Math.exp(res[1]);
+        B[4] = (float) Math.exp(res[1]);
         //type 6
         res = mnk_linear(ln_x, y);
         A[5] = res[0];
@@ -274,19 +251,18 @@ public class Programm {
         b[2] = B[2];
         //type 4
         a[3] = A[3];
-        b[3] = (float)Math.exp(B[3]);
+        b[3] = (float) Math.exp(B[3]);
         //type 5
         a[4] = A[4];
-        b[4] = (float)Math.exp(B[4]);
+        b[4] = (float) Math.exp(B[4]);
         //type 6
         a[5] = A[5];
         b[5] = B[5];
 
         //подсчёт сумм модулей (нужны квадраты) отклонений
-        for (int i = 0; i < 22; i++)
-        {
+        for (int i = 0; i < 22; i++) {
             deviation_sum[0] += Math.abs(y[i] - (a[0] * x[i] + b[0]));
-            deviation_sum[1] += Math.abs(y[i] - 1/(a[1] * x[i] + b[1]));
+            deviation_sum[1] += Math.abs(y[i] - 1 / (a[1] * x[i] + b[1]));
             deviation_sum[2] += Math.abs(y[i] - (a[2] / x[i] + b[2]));
             deviation_sum[3] += Math.abs(y[i] - (Math.pow(x[i], a[3]) * b[3]));
             deviation_sum[4] += Math.abs(y[i] - (Math.exp(a[4] * x[i]) * b[4]));
@@ -297,10 +273,8 @@ public class Programm {
         int function_type = 7;
 
         //чем меньше отклонение тем лучше
-        for (int i = 0; i < 6; i++)
-        {
-            if (deviation_sum[i] <= mn)
-            {
+        for (int i = 0; i < 6; i++) {
+            if (deviation_sum[i] <= mn) {
                 function_type = i;
                 mn = deviation_sum[i];
             }
@@ -309,12 +283,11 @@ public class Programm {
         return new MathFunc(a[function_type], b[function_type], function_type);
     }
 
-    float[] mnk_linear(float[] x, float[] y) // returns a and b
+    public float[] mnk_linear(float[] x, float[] y) // returns a and b
     {
         float sum_x = 0, sum_y = 0, sum_x_y = 0, sum_x_sq = 0;
         //подсчёт коофицентов
-        for (int i = 0; i < 8; i++)
-        {
+        for (int i = 0; i < 8; i++) {
             sum_x += x[i];
             sum_y += y[i];
             sum_x_y += x[i] * y[i];
@@ -329,15 +302,13 @@ public class Programm {
         return res;//[a, b]
     }
 
-    void print_result_table()
-    {
-        for (int i = 0; i < 22; i++)
-        {
-            float y_regression = (y_average * result_funcs[0].calc(x[ryx_order[0]][i]) *
-                    result_funcs[1].calc(x[ryx_order[1]][i]) *
-                    result_funcs[2].calc(x[ryx_order[2]][i]));
+    public void print_result_table() {
+        for (int i = 0; i < 22; i++) {
+            float y_regression = (y_average * result_funcs[0].calculate(x[ryx_order[0]][i]) *
+                    result_funcs[1].calculate(x[ryx_order[1]][i]) *
+                    result_funcs[2].calculate(x[ryx_order[2]][i]));
 
-            System.out.println(x[0][i] + " " +  x[1][i] + " " + x[2][i] + " " + y[i] + " " + y_regression);
+            System.out.println(x[0][i] + " " + x[1][i] + " " + x[2][i] + " " + y[i] + " " + y_regression);
         }
     }
 }

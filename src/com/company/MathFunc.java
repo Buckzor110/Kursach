@@ -1,19 +1,17 @@
 package com.company;
 
 public class MathFunc {
-    float a;
-    float b;
-    int type;
+    private final float a;
+    private final float b;
+    private final int type;
 
-    public MathFunc(float a, float b, int type)
-    {
+    public MathFunc(float a, float b, int type) {
         this.a = a;
         this.b = b;
         this.type = type;
     }
 
-    float calc(float x)
-    {
+    public float calculate(float x) {
         return switch (type) {
             case 0 -> a * x + b;
             case 1 -> 1 / (a * x + b);
@@ -26,8 +24,7 @@ public class MathFunc {
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return switch (type) {
             case 0 -> a + " * x + " + b;
             case 1 -> "1 / (" + a + " * x + " + b + ")";
