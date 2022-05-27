@@ -25,7 +25,7 @@ public class Program {
         fillMatrixD();
         fillRyx();
         sortRyx();
-        function_build();
+        functionBuild();
         printResultTable();
         return List.of(resultFunctions);
     }
@@ -60,7 +60,11 @@ public class Program {
     }
 
     private float ryxK(float[] x, float[] y) { //22, 22
-        float sumX = 0, sumY = 0, sumXY = 0, sumXSq = 0, sumYSq = 0, r;
+        float sumX = 0;
+        float sumY = 0;
+        float sumXY = 0;
+        float sumXSq = 0;
+        float sumYSq = 0;
 
         for (int i = 0; i < 22; i++) {
             sumX += x[i];
@@ -69,9 +73,7 @@ public class Program {
             sumXSq += x[i] * x[i];
             sumYSq += y[i] * y[i];
         }
-
-        r = (n * sumXY - sumX * sumY) / (float) Math.sqrt((n * sumXSq - sumX * sumX) * (n * sumYSq - sumY * sumY));
-        return r;
+        return (n * sumXY - sumX * sumY) / (float) Math.sqrt((n * sumXSq - sumX * sumX) * (n * sumYSq - sumY * sumY));
     }
 
     // заполнение матрицы matrix_D
@@ -94,7 +96,6 @@ public class Program {
     // Считает детерминант
     private float det(int a, int b) { // строка. столбец
         int ind = 0;
-        float d;
         float[] els = new float[9];
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
@@ -104,8 +105,7 @@ public class Program {
                 }
             }
         }
-        d = els[0] * els[4] * els[8] + els[1] * els[5] * els[6] + els[3] * els[7] * els[2];
-        return d;
+        return els[0] * els[4] * els[8] + els[1] * els[5] * els[6] + els[3] * els[7] * els[2];
     }
 
     private void fillRyx() {
@@ -133,7 +133,7 @@ public class Program {
         }
     }
 
-    private void function_build() {
+    private void functionBuild() {
         for (int i = 0; i < 3; i++) {
             MathFunc result = functionSelection(this.x[this.ryxOrder[i]], this.yNormalized);
             this.resultFunctions[i] = result;
@@ -264,7 +264,10 @@ public class Program {
     }
 
     private float[] mnkLinear(float[] x, float[] y) { // returns a and b
-        float sumX = 0, sumY = 0, sumXY = 0, sumXSq = 0;
+        float sumX = 0;
+        float sumY = 0;
+        float sumXY = 0;
+        float sumXSq = 0;
         //подсчёт коофицентов
         for (int i = 0; i < 8; i++) {
             sumX += x[i];
